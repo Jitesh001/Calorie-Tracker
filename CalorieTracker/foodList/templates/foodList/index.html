@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-dark">
+		<a href="#" class="navbar-brand">Calories Tracker</a>
+		  <div class="navbar">
+	      {% if user.is_authenticated %}
+	      <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+	      <a class="nav-item nav-link atc" href="{% url 'analysis' %}">Analysis</a>
+	      {% else %}
+	       <a class="nav-item nav-link" href="{% url 'login' %}">Login</a>
+	      {% endif %}
+	    </div>
+	</nav> <br>
+<div class="container">
+	
+	<div class="row">
+			<div class="col-md-12">
+				<form id='myform' method="POST">
+					{% csrf_token %}
+					<div class="form-group row">
+					<label class='col-md-2'><b>Type Your Food Item</b></label>
+					<input class='col-md-6' type="text" name='Fname' class="form-control" placeholder="Shawarma" required>
+					<button name='search' class="btn btn-success" type="submit">Search</button>
+					</div>
+				</form>	
+			</div>
+	</div>
+<!-- 	<a href="{% url 'logout' %}">Logout</a>
+	<a href="{% url 'analysis' %}">analysis</a>
+	<button class='btn atc btn-success'>analysis button</button> -->
+
+
+	{% if msg %}
+	sorry we can't find your item. Search it again !
+	{% endif %}
+
+	{% if f_name != None %}
+	<form id= 'form2' method="POST">
+		{% csrf_token %}
+		<input name='uname' type="hidden" id="uname" value="{{user.username}}">
+		<input name='fname' type="hidden" id="fname" value="{{f_name}}">
+		<input name='cals' type="hidden" id="cals" value="{{cal}}">
+		<input name='carbs' type="hidden" id="carbs" value="{{carbs}}">
+		<input name='prots' type="hidden" id="prots" value="{{prot}}">
+		<input name='fats' type="hidden" id="fats" value="{{fats}}">
+		<input name='units' type="hidden" id="units" value="{{unit}}">
+		<input name='wghts' type="hidden" id="wghts" value="{{wght}}">
+		<input name='quants' type="hidden" id="quants" value="{{quantity}}">
+	</form>
+	{% endif %}
+
+	{% if f_name != None %}
+	<div class="row">
+		<!-- <table>
+		  <tr>
+		    <th>Item name</th>
+		    <th>quantity</th>
+		    <th>unit</th>
+		    <th>wght</th>
+		    <th>Click to add</th>
+		  </tr>
+		  <tr>
+		    <td>{{f_name}}</td>
+		    <td id='tquant'>{{quantity}}</td>
+		    <td id='tunit'>{{unit}}</td>
+		    <td id='twght'>{{wght}}</td>
+		    <td>
+		    <button name='add' class="btn btn-primary" form="form2" type="submit">Add</button>
+		    </td>
+		  </tr>
+		  <tr><td><button onclick="addUnit()" name='addunit' class="btn btn-primary">Add unit</button></td></tr>
+		</table>
+ -->
+		<table class="table table-striped">
+		  <thead>
+		    <tr>
+			    <th scope="col">Item name</th>
+			    <th scope="col">quantity</th>
+			    <th scope="col">unit</th>
+			    <th scope="col">wght</th>
+			    <th scope="col">Click to add</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		    <tr>
+		       <td>{{f_name}}</td>
+			    <td id='tquant'>{{quantity}}</td>
+			    <td id='tunit'>{{unit}}</td>
+			    <td id='twght'>{{wght}}</td>
+			    <td>
+			    <button name='add' class="btn btn-primary" form="form2" type="submit">Add</button>
+		    </tr>
+		     <tr><td><button onclick="addUnit()" name='addunit' class="btn btn-primary">Add unit</button></td></tr>
+		  </tbody>
+		</table>
+
+
+   </div>
+   {% endif %}
+
+   {% if flist != None %}
+   <div class="row">
+			<div class="col-md-12">
+
+				<div>
+					<h4>Today's Consumption for {{user.username}}</h4>
+				</div>
+
+				<table id='table' class="table table-striped table-primary">
+					<tr class="bg-primary">
+						<th>Food Item</th>
+						<th>Carbs(gm)</th>
+						<th>Protien(gm)</th>
+						<th>Fats(gm)</th>
+						<th>Calories</th>
+						<th>Intake Unit</th>
+						<th>Consumed wght(gm)</th>
+						<th>Consumed Time</th>
+						<th>Action</th>
+					</tr>
+
+					{% for c in flist %}
+					<tr>
+						<td>{{c.fname}}</td>
+						<td>{{c.carbs}}</td>
+						<td>{{c.protien}}</td>
+						<td>{{c.fats}}</td>
+						<td>{{c.calories}}</td>
+						<td>{{c.units}}</td>
+						<td>{{c.weight}}</td>
+						<td>{{c.time}}</td>
+						<td><a class="btn btn-danger" href="{% url 'delete' c.id %}">
+						Remove</a></td>
+					</tr>
+					{% endfor %}
+
+					<tr>
+						<td id='name'><b>Total</b></td>
+						<td id='totalCarbs'></td>
+						<td id='totalProtien'></td>
+						<td id='totalFats'></td>
+						<td id='totalCalories'></td>
+						<td></td>
+						<td id='totalWeight'></td>
+					</tr>
+				</table>
+			</div>
+   {% endif %}
+
+   
+</div>
+</body>
+<script type="text/javascript">
+	var carbs=0, protien=0, fats=0, calories=0, weight=0;
+
+	for(var i=1; i<table.rows.length-1; i++){
+		carbs += parseFloat(table.rows[i].cells[1].innerHTML);
+		protien += parseFloat(table.rows[i].cells[2].innerHTML);
+		fats += parseFloat(table.rows[i].cells[3].innerHTML);
+		calories += parseFloat(table.rows[i].cells[4].innerHTML);
+		weight += parseFloat(table.rows[i].cells[6].innerHTML);
+	};
+
+	carbs = Math.round(carbs);
+	protien = Math.round(protien);
+	fats = Math.round(fats);
+	calories = Math.round(calories);
+	weight = Math.round(weight);
+	document.getElementById('totalCarbs').innerHTML = '<b>'+carbs+'(gm)</b>';
+	document.getElementById('totalProtien').innerHTML =  '<b>'+ protien+'(gm)</b>';
+	document.getElementById('totalFats').innerHTML =  '<b>'+fats+'(gm)</b>';
+	document.getElementById('totalCalories').innerHTML =  '<b>'+calories+'(KCal)</b>';
+	document.getElementById('totalWeight').innerHTML =  '<b>'+weight+'(gm)</b>';
+
+
+	function addUnit() {
+		var wght = parseFloat(document.getElementById("twght").innerHTML);
+		var quant = parseFloat(document.getElementById("tquant").innerHTML);
+		tquant = {{quantity}} + quant;
+		twght = {{wght}}+wght;
+		var unit = "{{unit}}";
+		document.getElementById("twght").innerHTML  = twght;
+		document.getElementById("tquant").innerHTML = tquant;
+		document.getElementById("wghts").value = twght;
+		document.getElementById("quants").value = tquant;
+		document.getElementById("units").value = tquant.toString() + " "+ unit;
+		cals = parseFloat(document.getElementById("cals").value);
+		carbs = parseFloat(document.getElementById("carbs").value);
+		prots = parseFloat(document.getElementById("prots").value);
+		fats = parseFloat(document.getElementById("fats").value);
+		document.getElementById("cals").value = cals+cals;
+		document.getElementById("carbs").value = carbs+carbs;
+		document.getElementById("prots").value = prots+prots;
+		document.getElementById("fats").value = fats+fats;		
+	};
+
+	console.log('it is working');
+
+
+	$(document).on('click', '.atc', function(){
+		localStorage.removeItem("nutri");
+		console.log('add to cart is clicked')
+		var nutri = { 'carbs': carbs, 'protien': protien, 'fats': fats,
+		'calories':calories };
+		localStorage.setItem('nutri', JSON.stringify(nutri));
+		});
+
+</script>
+</html>

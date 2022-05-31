@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+	<div class="container">
+	<div class="row">
+		<div class="col-md-4 offset-md-4">
+			<div class="card">
+				<div class="card-header text-white bg-info">
+					<div class="card-title">
+						Register
+					</div>
+				</div>
+				<div class="card-body">
+					<form method="POST">
+						{% csrf_token %}
+						{% for field in form %}
+						<div class="form-group">
+							{{field.name}}
+							<br>
+							{{field}}
+						</div>
+						{% endfor %}
+						<button class= 'btn-info' type="submit">Sign up</button>
+						<a href="{% url 'login' %}">login</a>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
